@@ -1,74 +1,141 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}| Home{% endblock title %}
+{% block title %} {% endblock title %}
+
 {% block content %}
-<!-- breadcrumb start-->
-<section class="breadcrumb">
+<!-- breadcrumb part start-->
+<section class="breadcrumb_part">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="breadcrumb_iner_item text-center" style="color: burlywood;">
-                    <h2>WELCOME TO BLOG PROJECT
-                        {% if user.is_authenticated %}, {{user.get_full_name}}!
-                        {% else %}
-                        !
-                        {% endif %}
-                    </h2>
+                <div class="breadcrumb_iner">
+                    <h2>{{blog.title}}</h2>
                 </div>
             </div>
         </div>
     </div>
 </section>
-    <!-- breadcrumb start-->
+<!-- breadcrumb part end-->
 <!--================Blog Area =================-->
-<section class="blog_area section_padding">
+<section class="blog_area single-post-area section_padding">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 mb-5 mb-lg-0">
-                <div class="blog_left_sidebar">
-                    {% for blog in blogs %}
-                    <article class="blog_item">
-                        <div class="blog_item_img">
-                            <img class="card-img rounded-0" src="{{blog.image.url}}" alt="">
-                            <a href="#" class="blog_item_date">
-                                <h3>{{blog.created_at}}</h3>
-                            </a>
+            <div class="col-lg-8 posts-list">
+                <div class="single-post">
+                    <div class="feature-img">
+                        <img class="img-fluid" src="{{blog.image.url}}" alt="">
+                    </div>
+                    <div class="blog_details">
+                        <h2>{{blog.title}}
+                        </h2>
+                        <!-- <ul class="blog-info-link mt-3 mb-4">
+                            <li><a href="#"><i class="far fa-user"></i> Travel, Lifestyle</a></li>
+                            <li><a href="#"><i class="far fa-comments"></i> 03 Comments</a></li>
+                        </ul> -->
+                        <p class="excert">
+                            {{blog.text|linebreaks}}
+                        </p>
+                        <p>
+                            MCSE boot camps have its supporters and its detractors. Some people do not understand why
+                            you
+                            should have to spend money on boot camp when you can get the MCSE study materials yourself
+                            at a
+                            fraction of the camp price. However, who has the willpower to actually sit through a
+                            self-imposed MCSE training. who has the willpower to actually
+                        </p>
+                        <div class="quote-wrapper">
+                            <div class="quotes">
+                                MCSE boot camps have its supporters and its detractors. Some people do not understand
+                                why you
+                                should have to spend money on boot camp when you can get the MCSE study materials
+                                yourself at
+                                a fraction of the camp price. However, who has the willpower to actually sit through a
+                                self-imposed MCSE training.
+                            </div>
                         </div>
-
-                        <div class="blog_details">
-                            <a class="d-inline-block" href="{% url 'single_blog' blog.id %}">
-                                <h2>{{blog.title}}</h2>
-                            </a>
-                            <p>{{blog.text_slug}}</p>
-                            <ul class="blog-info-link">
-                                <li><a href="#"><i class="far fa-user"></i> {{blog.author.user.get_full_name}}</a></li>
-                                <li><a href="#"><i class="far fa-comments"></i>{{blog.comments.count}} Comments</a></li>
-                                <li><a href="#"><i class="far fa-heart"></i>{{blog.likes|length}} People like this </a></li>
-
-                            </ul>
+                    </div>
+                </div>
+                <div class="navigation-top">
+                    <div class="d-sm-flex justify-content-between text-center">
+                        <p class="like-info" onclick="addOrRemoveLike({{blog.id}})">
+                            
+                            <span class="align-middle">
+                        {% if profile.id in blog.likes %}      
+                            <i id='likeColor' class="far fa-heart" style="color: red;"></i>
+                        {% else %}
+                        <i class="far fa-heart"></i>
+                        {% endif %}
+                            </span> 
+                        
+                        {% if blog.likes %}
+                        <span id="numLikes">{{blog.likes|length}}</span> people like this
+                        {% else %}
+                        <span id="numLikes">0</span> people like this
+                        {% endif %}
+                        </p>
+                        <div class="col-sm-4 text-center my-2 my-sm-0">
+                            <!-- <p class="comment-count"><span class="align-middle"><i class="far fa-comment"></i></span> 06 Comments</p> -->
                         </div>
-                    </article>
+                    </div>
+                </div>
+                <div class="blog-author">
+                    <div class="media align-items-center">
+                        <img src="{{blog.author.profile_image_thumbnail.url}}" alt="">
+                        <div class="media-body">
+                            <a href="#">
+                                <h4>{{blog.author.user.get_full_name}}</h4>
+                            </a>
+                            <p>Second divided from form fish beast made. Every of seas all gathered use saying you're,
+                                he
+                                our dominion twon Second divided from</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="comments-area">
+                    <h4>{{blog.comments.count}} Comments</h4>
+                    {% for comment in blog.comments.all %}
+                    <div class="comment-list">
+                        <div class="single-comment justify-content-between d-flex">
+                            <div class="user justify-content-between d-flex">
+                                <div class="thumb">
+                                    <img src="{{comment.author.profile_image_thumbnail.url}}" alt="">
+                                </div>
+                                <div class="desc">
+                                    <p class="comment">
+                                        {{comment.text|linebreaks}}
+                                    </p>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <h5>
+                                                <a href="#">{{comment.author.user.get_full_name}}</a>
+                                            </h5>
+                                            <p class="date">{{comment.created_at}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
-                    <nav class="blog-pagination justify-content-center d-flex">
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a href="#" class="page-link" aria-label="Previous">
-                                    <i class="ti-angle-left"></i>
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a href="#" class="page-link">1</a>
-                            </li>
-                            <li class="page-item active">
-                                <a href="#" class="page-link">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a href="#" class="page-link" aria-label="Next">
-                                    <i class="ti-angle-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    
+                    
+                </div>
+                <div class="comment-form">
+                    <h4>Leave a Comment</h4>
+                    <form class="form-contact comment_form" action="{% url 'leave_comment_to_blog' blog.id %}" method="POST" id="commentForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <textarea name="text" class="form-control w-100" name="comment" id="comment" cols="30" rows="9"
+                                        placeholder="Write Comment"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <button type='submit' class="btn_4 button-contactForm">Live Comment</button>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="col-lg-4">
@@ -88,7 +155,6 @@
                                 type="submit">Search</button>
                         </form>
                     </aside>
-
                     <aside class="single_sidebar_widget post_category_widget">
                         <h4 class="widget_title">Category</h4>
                         <ul class="list cat-list">
@@ -119,18 +185,17 @@
                             <li>
                                 <a href="#" class="d-flex">
                                     <p>Inspiration</p>
-                                    <p>21</p>
+                                    <p>(21)</p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="d-flex">
-                                    <p>Health Care (21)</p>
-                                    <p>09</p>
+                                    <p>Health Care</p>
+                                    <p>(21)</p>
                                 </a>
                             </li>
                         </ul>
                     </aside>
-
                     <aside class="single_sidebar_widget popular_post_widget">
                         <h3 class="widget_title">Recent Post</h3>
                         <div class="media post_item">
@@ -199,8 +264,6 @@
                             </li>
                         </ul>
                     </aside>
-
-
                     <aside class="single_sidebar_widget instagram_feeds">
                         <h4 class="widget_title">Instagram Feeds</h4>
                         <ul class="instagram_row flex-wrap">
@@ -236,11 +299,8 @@
                             </li>
                         </ul>
                     </aside>
-
-
                     <aside class="single_sidebar_widget newsletter_widget">
                         <h4 class="widget_title">Newsletter</h4>
-
                         <form action="#">
                             <div class="form-group">
                                 <input type="email" class="form-control" onfocus="this.placeholder = ''"
@@ -255,6 +315,5 @@
         </div>
     </div>
 </section>
-<!--================Blog Area =================-->
-
+<!--================Blog Area end =================-->
 {% endblock content %}

@@ -33,7 +33,10 @@
 
 <body>
     {% include 'partials/_navbar.html' %}
+    <!-- messages -->
+    {% include 'partials/_alerts.html' %}
 
+    <!-- end messages -->
     {% block content %} {% endblock content %}
 
     {% include 'partials/_footer.html' %}
@@ -63,6 +66,35 @@
     <script src="{% static 'js/contact.js' %}"></script>
     <!-- custom js -->
     <script src="{% static 'js/custom.js' %}"></script>
+    <script type="text/javascript">
+        function closeAlert() {
+            setTimeout(function () { $(".alert").alert('close'); }, 10000);
+        }
+        closeAlert();
+
+    </script>
+    <script type="text/javascript">
+        function addOrRemoveLike(blogId) {
+            $.ajax({
+              type: "POST",
+              url: "{% url 'add_or_remove_like_ajax' %}",
+              data: {
+                blog_id: blogId,
+                csrfmiddlewaretoken: "{{csrf_token}}"
+              },
+              success: function (data) {
+                        console.log(data.likes, data.like_color);
+                        if (data.like_color === "red") {
+                            $('#likeColor').css('color', 'red')
+                        } else {
+                            $('#likeColor').css('color', 'black')
+                        };
+                        $('#numLikes').text(data.likes);
+
+                    }
+                });
+            };
+    </script>
 </body>
 
 </html>

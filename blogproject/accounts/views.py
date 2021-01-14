@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import auth
 from django.contrib.auth.models import User
 from profiles.models import Profile
+from django.contrib import messages
+
 # Create your views here.
 def login(request):
     context = {}
@@ -16,8 +18,10 @@ def login(request):
         user = auth.authenticate(request, username=username, password=password)
         if user is not None:
             auth.login(request, user)
+            messages.success(request, 'Welcome back, {}'.format(user.username))
             return redirect('index')
         else:
+            messages.error(request, 'Username or Password is incorrect')
             return render(request, 'accounts/login.html', context=context)
 
 def register(request):
@@ -41,12 +45,15 @@ def register(request):
                     last_name=last_name
                     )
             except:
-                return render(render(request, 'accounts/register.html', context=context))
+                messages.error(request, 'Something going wrong...Please, try again...')
+                return render(request, 'accounts/register.html', context=context)
             else:
                 auth.login(request, user)
-                return redirect('index')
+                messages.success(request, '{}, you have been registered successfully! Fill your profile details now or can do it later!'.format(user.username))
+                return redirect('/profiles/profile/{}/'.format(user.username))
         else:
-            return render(render(request, 'account/register.html', context=context))
+            messages.error(request, 'Password and Confirm Password is not match...Please, try again...')
+            return render(request, 'account/register.html', context=context)
 def logout(request):
     auth.logout(request)
     return redirect('login')

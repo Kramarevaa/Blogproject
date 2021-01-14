@@ -3697,7 +3697,7 @@ ul {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: #000;
+  background-color: rgba(108, 214, 21, 0.89);
   content: "";
   opacity: 0.6;
   z-index: -1;
@@ -3743,7 +3743,7 @@ ul {
 
 /* line 49, /Applications/MAMP/htdocs/palash/cl/july 2019/193 Travel/193 travel html/sass/_breadcrumb.scss */
 .breadcrumb .breadcrumb_iner .breadcrumb_iner_item p a {
-  color: #fe5c24;
+  color: #fedd24;
 }
 
 /* line 54, /Applications/MAMP/htdocs/palash/cl/july 2019/193 Travel/193 travel html/sass/_breadcrumb.scss */
