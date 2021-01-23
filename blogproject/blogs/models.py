@@ -2,7 +2,9 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from profiles.models import Profile
 from comments.models import Comment
+from taggit.managers import TaggableManager
 # Create your models here.
+
 class Blog(models.Model):
     title = models.CharField(max_length=250, blank=False, default='Without title')
     text = models.TextField(default='', blank=False)
@@ -18,7 +20,7 @@ class Blog(models.Model):
             default=list,
             help_text='Collects user ids as Integer',
         )
-        
+    tags = TaggableManager(blank=True, verbose_name='Теги')
     def save(self, *args, **kwargs):
         self.text_slug = self.text[:197] + '...'
         super(Blog, self).save(*args, **kwargs)

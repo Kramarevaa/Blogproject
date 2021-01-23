@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from profiles.models import Profile
+from blogs.models import Blog
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -9,8 +10,10 @@ from django.contrib import messages
 def user_profile_page(request, username):
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
+    blogs = Blog.objects.filter(author=profile)
     context = {
-        'profile': profile
+        'profile': profile,
+        'blogs': blogs
     }
     return render(request, 'profiles/profile.html', context=context)
 
@@ -26,30 +29,27 @@ def user_profile_edit_page(request, username):
             messages.error(request, "You can't edit stranger' s profile")
             return redirect('/profiles/profile/{}'.format(user.username))
         return render(request, 'profiles/profile_edit.html', context=context)
-   
+ 
     if request.method == 'POST':
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
         status = request.POST['status']
         about = request.POST['about']
-        # user update
+        #user update
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
-        user.save()
-        # profile update
+        #profile update
         profile.status = status
         profile.about = about
         try:
             if any(request.FILES):
                 profile.profile_image = request.FILES['profile_image']
         except:
-             messages.error(request, 'Profile Image is not correct!')
-             return render(request, 'profiles/profile_edit.html', context=context)
+            messages.error(request, 'Profile image is not correct:')
+            return render(request, 'profile/profile_edit.html', context=context)
         user.save()
         profile.save()
         messages.success(request, 'Profile successfully changed!')
         return redirect('/profiles/profile/{}'.format(user.username))
-
-

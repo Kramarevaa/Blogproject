@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'blogs',
     'profiles',
     'likes',
+    'taggit',
+    'easy_thumbnails',
 ]
 
 MIDDLEWARE = [

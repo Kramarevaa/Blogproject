@@ -7,4 +7,8 @@ urlpatterns = [
     path('blog/<int:blog_id>/leave_comment_to_blog', views.leave_comment_to_blog, name='leave_comment_to_blog'),
     path('blog/<int:blog_id>/add_or_remove_like', views.add_or_remove_like, name='add_or_remove_like'),
     path('blog/like_ajax', views.add_or_remove_like_ajax, name='add_or_remove_like_ajax'),
+    path('blog/create', views.create_blog, name='create_blog'),
+    path('blog/<int:blog_id>/edit', views.edit_blog, name='edit_blog'),
+    path('blog/<int:blog_id>/delete', views.delete_blog, name='delete_blog'),
+
 ]
